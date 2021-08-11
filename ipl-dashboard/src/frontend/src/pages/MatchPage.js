@@ -2,11 +2,13 @@ import { React, useEffect, useState } from "react";
 import { MatchDetailCard } from "../components/MatchDetailCard";
 import { MatchSmallCard } from "../components/MatchSmallCard";
 import { useParams } from "react-router-dom";
+import "./MatchPage.scss";
+import { YearSelector } from "../components/YearSelector";
 
 export const MatchPage = () => {
   const [matches, setMatches] = useState([]);
   //const teamName = "Delhi Capitals";
-  const {teamName,year} = useParams();
+  const { teamName, year } = useParams();
   useEffect(() => {
     const fetchMathes = async () => {
       const response = await fetch(
@@ -17,14 +19,22 @@ export const MatchPage = () => {
       setMatches(data);
     };
     fetchMathes();
-  }, []);
+  }, [teamName, year]);
 
   return (
     <div className="MatchPage">
-      <h1>MatchPage</h1>
-      {matches.map((match) => (
-        <MatchDetailCard teamName={teamName} match={match} />
-      ))}
+      <div className="year-selector">
+        <h3> Select Year</h3>
+        <YearSelector teamName={teamName} />
+      </div>
+      <div>
+        <h1 className="page-heading">
+          {teamName} matches in {year}
+        </h1>
+        {matches.map((match) => (
+          <MatchDetailCard teamName={teamName} match={match} />
+        ))}
+      </div>
     </div>
   );
 };

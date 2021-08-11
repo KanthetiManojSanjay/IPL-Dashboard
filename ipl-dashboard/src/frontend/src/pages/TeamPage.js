@@ -4,19 +4,20 @@ import { MatchSmallCard } from "../components/MatchSmallCard";
 import { useParams } from "react-router-dom";
 import "./TeamPage.scss";
 import { PieChart } from "react-minimal-pie-chart";
+import { Link } from "react-router-dom";
 
 export const TeamPage = () => {
   const [team, setTeam] = useState({ matches: [] });
   const { teamName } = useParams();
 
   useEffect(() => {
-    const fetchMathes = async () => {
+    const fetchTeam = async () => {
       const response = await fetch(`http://localhost:8080/team/${teamName}`);
       const data = await response.json();
       console.log(data);
       setTeam(data);
     };
-    fetchMathes();
+    fetchTeam();
   }, [teamName]);
 
   if (!team || !team.teamName) {
@@ -31,8 +32,12 @@ export const TeamPage = () => {
         Wins / Losses
         <PieChart
           data={[
-            { title: "Losses", value: team.totalMatches- team.totalWins, color: '#a34d5d' },
-            { title: "Wins", value: team.totalWins, color: '#4da375' },
+            {
+              title: "Losses",
+              value: team.totalMatches - team.totalWins,
+              color: "#a34d5d",
+            },
+            { title: "Wins", value: team.totalWins, color: "#4da375" },
           ]}
         />
         ;
@@ -45,7 +50,11 @@ export const TeamPage = () => {
         <MatchSmallCard teamName={team.teamName} match={match} />
       ))}
       <div className="more-link">
-        <a href="#">More ></a>
+        <Link
+          to={`/teams/${teamName}/matches/${process.env.REACT_APP_DATA_END_YEAR}`}
+        >
+          More >
+        </Link>
       </div>
     </div>
   );
